@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Colorblind Sim — See Images as Colour-Blind People Do, Free | S3eidat Tools</title>
+<meta name="description" content="Simulate protanopia, deuteranopia, tritanopia, their milder forms and achromatopsia on any image or screenshot. Split and side-by-side views, export PNG. Free, nothing uploaded.">
+<meta property="og:title" content="Colorblind Sim — free colour-blindness simulator">
+<meta property="og:description" content="See any image the way people with colour-vision deficiency do. Runs 100% in your browser.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/colorblind-sim/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/colorblind-sim/">
+<meta property="og:image" content="https://s3eidat.github.io/colorblind-sim/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Colorblind Sim — See images as colour-blind people do">
+<meta name="twitter:description" content="See images as colour-blind people do. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/colorblind-sim/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Colorblind Sim", "url": "https://s3eidat.github.io/colorblind-sim/", "description": "See images as colour-blind people do. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/colorblind-sim/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="colorblind-sim">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Colorblind Sim</h1>
+    <p>See your design, chart or photo the way people with colour-vision deficiency see it. About 1 in 12 men and 1 in 200 women have some form of it. Your image stays on your device.</p>
+  </section>
+
+  <label class="drop" id="drop">
+    <input type="file" hidden>
+    <svg class="i"><use href="#i-image"/></svg>
+    <b>Drop an image or screenshot</b>
+    <span>or click to choose, or paste with <kbd>Ctrl</kbd>+<kbd>V</kbd></span>
+  </label>
+  <div class="row mt cb-start" id="startRow">
+    <button class="btn ghost small" id="sample"><svg class="i"><use href="#i-grid"/></svg>Try a sample image</button>
+  </div>
+
+  <section class="card stack" id="work" hidden>
+    <div class="row between">
+      <div class="row cb-file"><svg class="i"><use href="#i-image"/></svg><b id="fname"></b><span class="faint" id="fmeta"></span></div>
+      <button class="btn ghost small" id="another"><svg class="i"><use href="#i-refresh"/></svg>Another image</button>
+    </div>
+
+    <div class="row between">
+      <label class="field cb-type">Simulate
+        <select class="select" id="type"></select>
+      </label>
+      <div class="field"><span>View</span>
+        <div class="seg" id="view" role="group" aria-label="View">
+          <button aria-pressed="true" data-v="split">Split</button>
+          <button aria-pressed="false" data-v="side">Side by side</button>
+          <button aria-pressed="false" data-v="sim">Simulated</button>
+        </div>
+      </div>
+      <label class="field cb-sev" id="sevWrap">Severity <span class="cb-val" id="sevV">60%</span><input type="range" id="sev" min="10" max="100" step="5" value="60"></label>
+    </div>
+
+    <div class="cb-stage" id="stage">
+      <div class="cb-pane cb-orig"><canvas id="cvO" aria-label="Original image"></canvas><span class="cb-tag">Original</span></div>
+      <div class="cb-pane cb-sim"><canvas id="cvS" aria-label="Simulated image"></canvas><span class="cb-tag" id="simTag"></span></div>
+      <div class="cb-handle" id="handle" role="slider" tabindex="0" aria-label="Split position" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+    </div>
+
+    <div class="row between">
+      <p class="faint cb-hint" id="hint">Drag across the image to move the split. Arrow keys work on the handle.</p>
+      <div class="row">
+        <button class="btn small" id="dl"><svg class="i"><use href="#i-download"/></svg>This view (.png)</button>
+        <button class="btn primary small" id="zip"><svg class="i"><use href="#i-download"/></svg>All types (.zip)</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card mt" id="allCard" hidden>
+    <h2>All types <small>click one to inspect it</small></h2>
+    <div class="cb-grid" id="grid"></div>
+  </section>
+
+  <div class="grid-2 mt cb-info">
+    <section class="card stack">
+      <h2 id="infoTitle">About colour blindness</h2>
+      <p id="infoText" class="cb-text"></p>
+      <p class="faint cb-text" id="infoWho"></p>
+    </section>
+    <section class="card stack">
+      <h2>Design tips</h2>
+      <ul class="cb-tips">
+        <li><b>Never use colour alone</b> to carry meaning: add labels, icons, patterns or position.</li>
+        <li><b>Avoid red against green</b> (and green against brown). Blue with orange works for almost everyone.</li>
+        <li><b>Vary lightness</b>, not just hue: if two colours look the same in Achromatopsia, they may clash for others too.</li>
+        <li><b>Charts:</b> label lines directly, use dashes or markers, and keep legends close to the data.</li>
+        <li><b>Links and errors:</b> underline links, and pair red error states with an icon and text.</li>
+      </ul>
+    </section>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
